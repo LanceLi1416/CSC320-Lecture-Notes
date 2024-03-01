@@ -354,3 +354,72 @@ But what if the last row of the matrix is not $(0, 0, 1)$?
         \end{bmatrix}
     \]
 \end{definition}
+
+All homographies are invertible. This is because Homographies map unique points to unique points. 
+
+% TODO: Why do lines remain straight after a homography
+
+\begin{remark}
+    Lines remain straight after a homography.
+
+    Let $\ell^T p = 0$ be a line. It suffices to show that all points on this line are mapped to points on a line.
+
+    % TODO
+\end{remark}
+
+\begin{example}
+    A naive image warping algorithm is forward mapping. 
+
+    \begin{verbatim}
+input: src_image, H
+output: dest_image
+
+for c=1 to num_columns               // cycle over all source pixels
+   for r=1 to num_rows
+        x, y = pixel_xy(r,c)         // get the source pixel's (x,y) coordinates
+        p = homogeneous_coords(x, y) // convert to vector homogeneous coords
+        p_prime = H*p                // apply homography
+        x_prime, y_prime = euclidean_coords(p_prime)  // convert to Euclidean coords
+        r_prime, c_prime = pixel_rc(x_prime, y_prime) // calculate the dest pixel    
+        dest_image(r_prime, c_prime) = src_image(r,c) // copy pixel color            
+    \end{verbatim}
+
+    This algorithm has some problems:
+
+    \begin{listu}
+        \item Magnification causes ``holes'' in destination image
+        \item Minification causes overwriting of pixel contents
+    \end{listu}
+\end{example}
+
+\subsubsection{Backward-Mapping Algorithm}
+
+This is also known as the \term{inverse mapping algorithm}. This algorithm does not create ``holes'' in the destination image.
+
+\begin{verbatim}
+input: src_image, H
+output: dest_image
+
+for c_prime=1 to num_columns                          // cycle over all dest px
+   for r_prime=1 to num_rows
+       x_prime, y_prime = pixel_xy(r_prime,c_prime)   // get dest px's (x,y)
+       p_prime = homogeneous_coords(x_prime, y_prime) // convert to homo. coords
+       p = inverse(H)*p_prime                         // apply inverse homography
+       x, y = euclidean_coords(p)                     // convert to Euclidean
+       r, c = pixel_rc(x, y)                          // calculate source px
+       dest_image(r_prime, c_prime) = src_image(r,c)  // copy px color
+\end{verbatim}
+
+\section{Perspective Viewing}
+
+\subsection{Aperture}
+
+% TODO
+
+\subsection{Geometry of Perspective Projection}
+
+% TODO
+
+\section{Alignment and Stitching}
+
+% TODO
