@@ -414,12 +414,184 @@ for c_prime=1 to num_columns                          // cycle over all dest px
 
 \subsection{Aperture}
 
-% TODO
+Without an aperture, every sensor receives every light, so the image is very blurry. We need an aperture to control the amount of light that enters the camera. The aperture acts as a diaphragm, allowing us to regulate the size of the opening through which light passes. By adjusting the aperture size, we can control the amount of light that reaches the sensor, resulting in a properly exposed image. 
 
-\subsection{Geometry of Perspective Projection}
+The image we get is up-side-down, and as we increase the aperture size, the image becomes more blurry. 
 
-% TODO
+\subsection{Perspective Projection}
+
+\subsubsection{Geometry of Perspective Projection}
+
+\begin{definition}[Focal Length]
+    The \term{focal length} of a lens is the distance from the lens to the point where light rays converge to a point.
+\end{definition}
+
+\begin{figure}[ht!]
+    \centering
+    \begin{tikzpicture}
+        \draw[red] (3, 0) -- (-3,  0);
+        \draw[red] (3, 1) -- (-3, -1);
+
+        \draw[dotted] (3, 1) -- (3, 0) node[right] {$z_0$};
+        \draw[dotted] (3, 1) -- (0, 1) node[above right] {$y_0$};
+        \draw[dotted] (-3, -1) -- (-3, 0) node[above right] {$f$};
+        \draw[dotted] (-3, -1) -- (0, -1) node[right] {$y_i$};
+
+        \draw[thick,-latex] ( 0, -1.5) -- ( 0  , 2) node[right] {$y$ axis};
+        \draw[thick,-latex] (-3,  0  ) -- (-3.5, 0) node[left]  {$z$ axis};
+
+        \draw[            lightBlue] (-3, -1.5) -- (-3, 2);
+        \draw[latex-latex,lightBlue] (-3,  1  ) -- ( 0, 1) node[midway,above] {Focal Length $f$};
+
+        \filldraw ( 3,  0) circle (0.05);
+        \filldraw ( 3,  1) circle (0.05);
+        \filldraw ( 0,  1) circle (0.05);
+        \filldraw (-3,  0) circle (0.05);
+        \filldraw (-3, -1) circle (0.05);
+        \filldraw ( 0, -1) circle (0.05);
+    \end{tikzpicture}
+\end{figure}
+
+From similar triangles, we get \[
+    \frac{y_i}{y_0} = \frac{f}{z_0} \implies y_i = \frac{f}{z_0} \cdot y_0
+\]
+
+The same applies to 3-dimensional points.
+
+\begin{figure}[ht!]
+    \centering
+    \begin{tikzpicture}
+        \draw[red] (3,0, 0) -- (-3, 0,0);
+        \draw[red] (3,0,-2) -- (-3, 0,2);
+        \draw[red] (3,1,-2) -- (-3,-1,2);
+
+        \draw[dotted] ( 3,0,-2) -- ( 3, 0, 0) node[below] {$z_0$};
+        \draw[dotted] ( 3,0,-2) -- ( 3, 1,-2) node[right] {$\begin{bmatrix} x_0 \\ y_0 \\ z_0 \end{bmatrix}$};
+        \draw[dotted] (-3,0, 2) -- (-3, 0, 0) node[above] {$f$};
+        \draw[dotted] (-3,0, 2) -- (-3,-1, 2) node[left]  {$\begin{bmatrix} x_i \\ y_i \\ z_i \end{bmatrix}$};
+
+        \draw[thick,-latex] ( 0,   0,0) -- ( 0,2,0) node[right] {$y$ axis};
+        \draw[thick,-latex] (-4.14,0,0) -- (-5,0,0) node[above] {$z$ axis};
+
+        \draw[lightBlue] (-3,-2.5,-2) -- (-3,2,-2) -- (-3,2,3) -- (-3,-2.5,3) -- cycle;
+        \node[lightBlue] at (-3, 3, 3) {Image Plane};
+
+        \filldraw ( 3, 0, 0) circle (0.05);
+        \filldraw ( 3, 0,-2) circle (0.05);
+        \filldraw ( 3, 1,-2) circle (0.05);
+        \filldraw (-3, 0, 0) circle (0.05);
+        \filldraw (-3, 0, 2) circle (0.05);
+        \filldraw (-3,-1, 2) circle (0.05);
+
+        \node at (0, 0, 0) [below right] {$\begin{bmatrix} 0 \\ 0 \\ 0 \end{bmatrix}$};
+        \filldraw (0, 0, 0) circle (0.05);
+    \end{tikzpicture}
+\end{figure}
+
+We have \[
+    \begin{bmatrix} x_i \\ y_i \\ z_i \end{bmatrix} = \frac{f}{z_0} \cdot \begin{bmatrix} x_0 \\ y_0 \\ z_0 \end{bmatrix}
+\] Interpretation of homogeneous equality tells us that ``all 3D points have the same projection'', \[
+    \begin{bmatrix} x_i \\ y_i \\ z_i \end{bmatrix} \cong \begin{bmatrix} x_0 \\ y_0 \\ z_0 \end{bmatrix}
+\] In other words, $\begin{bmatrix} x_i \\ y_i \\ z_i \end{bmatrix}$ represents a ray through the origin. 
+
+\subsubsection{Homogeneous 3D Coordinates}
+
+\begin{figure}[ht!]
+    \centering
+    \begin{tikzpicture}
+        \draw[red] (3,0, 0) -- (-3, 0,0);
+        \draw[red] (3,0,-2) -- (-3, 0,2);
+        \draw[red] (3,1,-2) -- (-3,-1,2);
+
+        \draw[dotted] ( 3,0,-2) -- ( 3, 0, 0) node[below] {$z_0$};
+        \draw[dotted] ( 3,0,-2) -- ( 3, 1,-2) node[right] {$\begin{bmatrix} x_0 \\ y_0 \\ z_0 \\ 1 \end{bmatrix}$};
+        \draw[dotted] (-3,0, 2) -- (-3, 0, 0) node[above] {$f$};
+        \draw[dotted] (-3,0, 2) -- (-3,-1, 2) node[left]  {$\begin{bmatrix} x_i \\ y_i \\ z_i \end{bmatrix}$};
+
+        \draw[thick,-latex] ( 0,   0,0) -- ( 0,2,0) node[right] {$y$ axis};
+        \draw[thick,-latex] (-4.14,0,0) -- (-5,0,0) node[above] {$z$ axis};
+
+        \draw[lightBlue] (-3,-2.5,-2) -- (-3,2,-2) -- (-3,2,3) -- (-3,-2.5,3) -- cycle;
+        \node[lightBlue] at (-3, 3, 3) {Image Plane};
+
+        \filldraw ( 3, 0, 0) circle (0.05);
+        \filldraw ( 3, 0,-2) circle (0.05);
+        \filldraw ( 3, 1,-2) circle (0.05);
+        \filldraw (-3, 0, 0) circle (0.05);
+        \filldraw (-3, 0, 2) circle (0.05);
+        \filldraw (-3,-1, 2) circle (0.05);
+
+        \node at (0, 0, 0) [below right] {$\begin{bmatrix} 0 \\ 0 \\ 0 \\ 1 \end{bmatrix}$};
+        \filldraw (0, 0, 0) circle (0.05);
+    \end{tikzpicture}
+\end{figure}
+
+Similar to 2D homogeneous coordinates, we can represent 3D points in homogeneous coordinates \[
+    \begin{bmatrix} x_0 \\ y_0 \\ z_0 \end{bmatrix} \cong \begin{bmatrix} x_0 \\ y_0 \\ z_0 \\ 1 \end{bmatrix}
+\] To convert from the homogeneous coordinates to the Euclidean coordinates, we divide the first three coordinates by the fourth coordinate, i.e. \[
+    \begin{bmatrix} x \\ y \\ z \end{bmatrix} = \begin{bmatrix} x_0 \\ y_0 \\ z_0 \end{bmatrix} / w_0
+\]
+
+\begin{remark}
+    The point \[ \begin{bmatrix} x_0 \\ y_0 \\ z_0 \\ 0 \end{bmatrix} \] is at infinity in 3D space, in the direction of the vector $\begin{bmatrix} x_0 \\ y_0 \\ z_0 \end{bmatrix}$.
+\end{remark}
+
+Homogeneous coordinates provide us a convenient way to express the projective of a 3D point into a 2D image, \[
+    \begin{bmatrix} x_i \\ y_i \\ 1 \end{bmatrix} = 
+    \begin{bmatrix} \frac{f}{z_0} \cdot x_0 \\ \frac{f}{z_0} \cdot y_0 \\ 1 \end{bmatrix} \cong 
+    \begin{bmatrix} f & 0 & 0 & 0 \\ 0 & f & 0 & 0 \\ 0 & 0 & 1 & 0 \end{bmatrix} 
+    \begin{bmatrix} x_0 \\ y_0 \\ z_0 \\ 1 \end{bmatrix}
+\] where $\begin{bmatrix} x_i \\ y_i \\ 1 \end{bmatrix}$ is the homogeneous coordinates of the 2D projection of the 3D point $\begin{bmatrix} x_0 \\ y_0 \\ z_0 \\ 1 \end{bmatrix}$, and the only difference between the 2D and 3D projection matrices is the scaling factor $\frac{f}{z_0}$.
 
 \section{Alignment and Stitching}
 
-% TODO
+% TODO: Add content
+
+\subsection{Estimating Homography from Point Correspondence}
+
+\begin{claim}
+    Given sufficiently many point correspondences we can compute tha homogeneous transformation $H$ that aligns two images. We need at least 4 correspondences for a unique solution. 
+\end{claim} 
+
+Given a point correspondence $\begin{bmatrix} {x_i}' \\ {y_i}' \\ 1 \end{bmatrix} \cong \begin{bmatrix} x_i \\ y_i \\ 1 \end{bmatrix}$, we can write the following equation \[
+    \begin{bmatrix} {x_i}' \\ {y_i}' \\ 1 \end{bmatrix} \cong H \begin{bmatrix} x_i \\ y_i \\ 1 \end{bmatrix}
+    \iff
+    \begin{bmatrix} {x_i}' \\ {y_i}' \\ 1 \end{bmatrix} \cong \begin{bmatrix} a & b & c \\ d & e & f \\ g & h & 1 \end{bmatrix} \begin{bmatrix} x_i \\ y_i \\ 1 \end{bmatrix}
+\] which allows us to establish a system of linear equations \[
+    \begin{bmatrix} {x_i}' \\ {y_i}' \\ 1 \end{bmatrix} \cong 
+    \begin{bmatrix} ax_i + by_i + c \\ dx_i + ey_i + f \\ gx_i + hy_i + 1 \end{bmatrix} 
+    \iff
+    \begin{bmatrix} {x_i}' \\ {y_i}' \\ 1 \end{bmatrix} \cong 
+    \begin{bmatrix} {ax_i + by_i + c}/{gx_i + hy_i + 1} \\ {dx_i + ey_i + f}/{gx_i + hy_i + 1} \\ 1 \end{bmatrix} 
+\]
+
+That is, one correspondence gives us two linear equations. We have 8 unknowns, so we need 4 correspondences to solve the system of linear equations.
+
+\section{3D Metrology}
+
+\subsection{3D Reconstruction from 2D Images}
+
+% TODO: Football example
+
+\subsection{Vanishing Points}
+
+\begin{definition}
+    A \term{vanishing point} is a point on the image plane of a perspective rendering where the two-dimensional perspective projections of mutually parallel lines in three-dimensional space appear to converge. 
+\end{definition}
+
+\begin{figure}[ht!]
+    \centering
+
+    \begin{subfigure}{0.45\linewidth}
+        \includegraphics[width=\linewidth]{figures/640px-Vanishing_point.svg.png}
+        % TODO: cite https://pxhere.com/en/photo/734310
+    \end{subfigure}
+    \hfil%
+    \begin{subfigure}{0.45\linewidth}
+        \includegraphics[width=\linewidth]{figures/nature-forest-track-railway-railroad-bridge-734310-pxhere.com.jpg}
+        % TODO: cite https://commons.wikimedia.org/wiki/File:Vanishing_point.svg
+    \end{subfigure}
+
+\end{figure}
+
+Every direction in space has a unique vanishing point. These vanishing points are the intersection of the image plane with the projective space, and they all lie on the horizon line.
