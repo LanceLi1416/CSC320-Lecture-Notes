@@ -1,4 +1,5 @@
 *.psd
+*.bbl-SAVE-ERROR
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
