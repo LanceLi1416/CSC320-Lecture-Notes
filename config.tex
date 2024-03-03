@@ -12,6 +12,7 @@
 \usepackage{algorithmicx}
 \usepackage{algpseudocode}
 \usepackage{amsfonts,amsmath,amsthm,amssymb}
+\usepackage{array}
 \usepackage{booktabs}
 \usepackage{float}
 \usepackage{graphicx}
@@ -30,6 +31,15 @@
 % ------------------
 % Shortcuts
 % ------------------
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\id}{\mathrm{id}}
+
+\newcommand{\Frontier}{\texttt{Frontier}}
+
+\newcommand{\bigo}[1]{\mathcal{O}\left(#1\right)}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+
 
 % ------------------
 % Command Redefinitions
@@ -42,6 +52,9 @@
     \let\@ifnextchar\new@ifnextchar
     \array{#1}}
 \makeatother
+
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
 
 % ------------------
 % Colors
@@ -62,13 +75,26 @@
 \definecolor{lightRed}{rgb}{1.0, 0.50, 0.50}
 \definecolor{darkGreen}{rgb}{0.31, 0.54, 0.30}
 \definecolor{violet}{RGB}{186, 153, 242}
+\definecolor{darkRed}{HTML}{b91231}
+
+\definecolor{algo-kwd}{HTML}{e43c48}
+
+\input{colors.tex}
 
 %----------------
 %	Text Styles
 %----------------
-\DeclareTextFontCommand{\term}{\color{orange}\bfseries}
-\DeclareTextFontCommand{\bred}{\color{red}\bfseries}
-\DeclareTextFontCommand{\itblue}{\color{lightBlue}\itshape}
+% \DeclareTextFontCommand{\term}{\color{orange}\bfseries}
+% \DeclareTextFontCommand{\bred}{\color{darkRed}\bfseries}
+% \DeclareTextFontCommand{\itblue}{\color{lightBlue}\itshape}
+
+\DeclareTextFontCommand{\term}{\color{Orange-900}\bfseries}
+
+\DeclareTextFontCommand{\bold}{\bfseries}
+\DeclareTextFontCommand{\italic}{\itshape}
+
+\renewcommand{\textbf}[1]{\textcolor{Red-800}{\bfseries #1}}
+\renewcommand{\textit}[1]{\textcolor{Light-Blue-400}{\itshape #1}}
 
 \DeclareTextFontCommand{\vector}{\bfseries\itshape}
 
@@ -83,12 +109,38 @@
     urlcolor=blue,
 }
 
+
 % ------------------
 % Tikz Externalize
 % ------------------
 \usetikzlibrary{external}
 \tikzexternalize[prefix=tikz/]
-\tikzset{external/only named=true}
+\tikzexternaldisable
+\BeforeBeginEnvironment[label]{tikzpicture}{\tikzexternalenable}
+\AfterEndEnvironment[label]{tikzpicture}{\tikzexternaldisable}
+
+% ------------------
+% Algorithms
+% ------------------
+% Change color of keywords
+\algrenewcommand\algorithmicfunction{\textcolor{algo-kwd}{\textbf{function}}}
+\algrenewcommand\algorithmicreturn{\textcolor{algo-kwd}{\textbf{return}}}
+
+\algrenewcommand\algorithmicfor{\textcolor{algo-kwd}{\textbf{for}}}
+\algrenewcommand\algorithmicwhile{\textcolor{algo-kwd}{\textbf{while}}}
+\algrenewcommand\algorithmicdo{\textcolor{algo-kwd}{\textbf{do}}}
+
+\algrenewcommand\algorithmicif{\textcolor{algo-kwd}{\textbf{if}}}
+\algrenewcommand\algorithmicthen{\textcolor{algo-kwd}{\textbf{then}}}
+\algrenewcommand\algorithmicelse{\textcolor{algo-kwd}{\textbf{else}}}
+
+\algrenewcommand\Call[2]{\textproc{\color{primary}\textsc{#1}}(#2)}
+
+% No end if, end for, etc.
+\algtext*{EndIf}
+\algtext*{EndFor}
+\algtext*{EndWhile}
+\algtext*{EndFunction}
 
 % ------------------
 % Boxes
@@ -156,6 +208,8 @@
 
 \newenvironment{rtheorem}[2][]    {\begin{Theorem}{#1}{#2}}                               {\end{Theorem}}
 
+\newenvironment{solution}         {\color{primary}\textbf{Solution:}}                     {}
+
 \theoremstyle{definition}
 \newtheorem*{exam}{\color{primary}Example}
 % \newcommand{\example}[1]{\begin{exam}#1\end{exam}}
@@ -179,8 +233,11 @@
 
 \newcommand*{\itembolasazules}[1]{\protect\cnumero{#1}{primary}}
 
-\newenvironment{listo} {\begin{enumerate}[label=\itembolasazules{\arabic*}]} {\end{enumerate}}
-\newenvironment{listu} {\begin{itemize}  [label=$\color{primary} \bullet$]}  {\end{itemize}}
+% \newenvironment{listo} {\begin{enumerate}[label=\itembolasazules{\arabic*}]} {\end{enumerate}}
+% \newenvironment{listu} {\begin{itemize}  [label=$\color{primary} \bullet$]}  {\end{itemize}}
+
+\setlist[itemize]{label=$\color{primary} \bullet$}
+\setlist[enumerate]{label=\itembolasazules{\arabic*}}
 
 % ------------------
 % Table of Contents
@@ -307,6 +364,7 @@
 \usetikzlibrary{shapes.geometric}
 \usepackage{anyfontsize}
 \newcommand{\frontpage}[3]{
+    \tikzset{external/export next=false}
     \begin{tikzpicture}[remember picture, overlay]
         % Background
         \fill[primary] (current page.south west) rectangle (current page.north east);

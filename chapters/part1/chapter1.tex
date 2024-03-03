@@ -6,7 +6,7 @@
 
 \subsubsection{Basic Notational Conventions}
 
-\begin{listu}
+\begin{itemize}
     \item Column-Vector Representation \[
         \begin{bmatrix}
             x \\
@@ -28,7 +28,7 @@
             x & y
         \end{bmatrix}
     \]
-\end{listu}
+\end{itemize}
 
 \subsubsection{Homogeneous Coordinates}
 
@@ -201,7 +201,7 @@ We can take the cross product of $\ell_1$ and $\ell_2$ to obtain $p$: \[
 
 \subsection{Affine 2D Transformations}
 
-\begin{listu}
+\begin{itemize}
     \item \textbf{Identity} \[
         \begin{bmatrix}
             x' \\ y' \\ w'
@@ -301,7 +301,7 @@ We can take the cross product of $\ell_1$ and $\ell_2$ to obtain $p$: \[
             x \\ y \\ 1
         \end{bmatrix}
     \]
-\end{listu}
+\end{itemize}
 
 We can combine these transformations to form more complex transformations. For example, we can combine a rotation and a translation to form a \term{rotation about a point} transformation. 
 
@@ -386,10 +386,10 @@ for c=1 to num_columns               // cycle over all source pixels
 
     This algorithm has some problems:
 
-    \begin{listu}
+    \begin{itemize}
         \item Magnification causes ``holes'' in destination image
         \item Minification causes overwriting of pixel contents
-    \end{listu}
+    \end{itemize}
 \end{example}
 
 \subsubsection{Backward-Mapping Algorithm}
