@@ -641,4 +641,56 @@ Form the stated desiderata it is possible to also derive a 3rd degree polynomial
     It is impossible for a second degree polynomial to satisfy both of these properties.
 \end{remark}
 
-\section{Fouriér Transform}
+\section{Fourier Transform}
+
+\subsection{The Fourier Transform}
+
+Any periodic signal can be expressed as a sum of sines and cosines. The Fourier transform is a generalization of this idea to non-periodic signals.
+
+In the \textbf{fourier domain}, a point in space no longer represents a value of the signal, but a \textit{frequency} of the signal.
+
+\begin{figure}[ht!]
+    \centering
+    \begin{tikzpicture}
+        \draw[thick,-latex] (-2, 0) -- (2, 0) node[right] {$\omega_x$};
+        \draw[thick,-latex] (0, -2) -- (0, 2) node[right] {$\omega_y$};
+
+        \fill[black] (0, 0) circle (0.1) node[below right] {$(0, 0)$};
+
+        \node (x) at (3, -1) {Spacial frequency along $x$};
+        
+        \node (y) at (-3, 2) {Spacial frequency along $y$};
+    \end{tikzpicture}
+
+    \caption{The Fourier domain of a constant-intensity image (the ``DC component'')}
+\end{figure}
+
+\begin{example}
+    The points in the Fourier domain represent the frequencies of the signal.
+
+    \begin{itemize}
+        \item The point $(5, 0)$ represents an image that varies sinusoidally along $x$ with a frequency of $5$ cycles per unit length. 
+        \item The point $(0, 5)$ represents an image that varies sinusoidally along $y$ with a frequency of $5$ cycles per unit length.
+    \end{itemize}
+
+    The larger the magnitude of the point, the higher the frequency of the sinusoid.
+
+    \begin{figure}[ht!]
+        \centering
+        \includegraphics[width=0.25\linewidth]{figures/stp1fil1.png}
+
+        \caption{The image in the spatial domain corresponds to point $(17, 17)$ in the Fourier domain.}
+    \end{figure}
+\end{example}
+
+Merely specifying the frequencies $(\omega_x, \omega_y)$ is \textbf{not} sufficient to uniquely determine the image. We need the sinusoid to have a \textit{phase} as well. The general expression for the intensity of pixel $(x, y)$ represented by $(\omega_x, 0) \& (-\omega_x, 0)$ is given by \[
+    I(x, y) = \cos \left( \omega_x \frac{2\pi}{C} x + \varphi \right),
+\] and similarly, the general expression for the intensity of pixel $(x, y)$ represented by $(0, \omega_y) \& (0, -\omega_y)$ is given by \[
+    I(x, y) = \cos \left( \omega_y \frac{2\pi}{R} y + \varphi \right).
+\] Thus, the general expression for image represented by $(\omega_x, \omega_y)$ is given by \[
+    I(x, y) = \cos \left[ \left( \omega_x \frac{2\pi}{C} x \right) + \omega_y \left( \frac{2\pi}{R} y + \varphi \right) \right].
+\]
+
+To properly account for phase, $(\omega_x, \omega_y)$ actualy represents an image whose intensities are \textit{complex-valued}. The image will have a real component and an imaginary component, and the phase of the sinusoid is given by the angle of the complex number, \[
+    I(x, y) = \cos(2\pi \frac{x}{C} \omega + \varphi) + j \sin(2\pi \frac{x}{C} \omega + \varphi).
+\]
